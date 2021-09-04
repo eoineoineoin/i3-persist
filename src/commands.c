@@ -2326,3 +2326,18 @@ void cmd_debuglog(I3_CMD, const char *argument) {
     // XXX: default reply for now, make this a better reply
     ysuccess(true);
 }
+
+
+/**
+ * Implementation of 'persist_workspace <name>'
+ *
+ */
+void cmd_persist_workspace(I3_CMD, const char* name)
+{
+    if (name)
+    {
+        LOG("Persisting workspace %s\n", name);
+        Con *workspace = get_existing_workspace_by_name(name);
+        workspace->persists = true;
+    }
+}

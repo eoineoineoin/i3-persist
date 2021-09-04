@@ -49,6 +49,7 @@ state INITIAL:
   'title_align'                            -> TITLE_ALIGN
   'show_marks'                             -> SHOW_MARKS
   'workspace'                              -> WORKSPACE
+  'persist_workspace'                      -> PERSIST_WORKSPACE
   'ipc_socket', 'ipc-socket'               -> IPC_SOCKET
   'ipc_kill_timeout'                       -> IPC_KILL_TIMEOUT
   'restart_state'                          -> RESTART_STATE
@@ -289,6 +290,11 @@ state FORCE_DISPLAY_URGENCY_HINT_MS:
       ->
   end
       -> call cfg_force_display_urgency_hint(&duration_ms)
+
+# persist_workspace <workspace name>
+state PERSIST_WORKSPACE:
+  workspace_name = string
+    -> call cfg_persist_workspace($workspace_name)
 
 # focus_on_window_activation <smart|urgent|focus|none>
 state FOCUS_ON_WINDOW_ACTIVATION:

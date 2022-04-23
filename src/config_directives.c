@@ -371,6 +371,13 @@ CFGFUN(force_display_urgency_hint, const long duration_ms) {
     config.workspace_urgency_timer = duration_ms / 1000.0;
 }
 
+CFGFUN(persist_workspace, const char* workspace_name) {
+    struct PersistentWorkspace *pw = scalloc(1, sizeof(struct PersistentWorkspace));
+    pw->name = sstrdup(workspace_name);
+    SLIST_INSERT_HEAD(&config.persistent_workspaces, pw, entries);
+}
+
+
 CFGFUN(focus_on_window_activation, const char *mode) {
     if (strcmp(mode, "smart") == 0)
         config.focus_on_window_activation = FOWA_SMART;

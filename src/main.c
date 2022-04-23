@@ -1192,6 +1192,16 @@ int main(int argc, char *argv[]) {
         free(command);
     }
 
+    /* Create and persist any requested workspaces */
+    struct PersistentWorkspace* persistentWorkspace;
+    SLIST_FOREACH(persistentWorkspace, &config.persistent_workspaces, entries)
+    {
+        //<todo.eoin Firgure out if this is an arbitrary string or a number:
+        Con *workspace = workspace_get(persistentWorkspace->name);
+        workspace->persists = true;
+        //<todo.eoin Free list
+    }
+
     /* Make sure to destroy the event loop to invoke the cleanup callbacks
      * when calling exit() */
     atexit(i3_exit);

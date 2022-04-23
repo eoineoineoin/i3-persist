@@ -508,7 +508,7 @@ void workspace_show(Con *workspace) {
      * when to defer it. */
     if (old && TAILQ_EMPTY(&(old->nodes_head)) && TAILQ_EMPTY(&(old->floating_head))) {
         /* check if this workspace is currently visible */
-        if (!workspace_is_visible(old)) {
+        if (!workspace_is_visible(old) && !old->persists) {
             LOG("Closing old workspace (%p / %s), it is empty\n", old, old->name);
             yajl_gen gen = ipc_marshal_workspace_event("empty", old, NULL);
             tree_close_internal(old, DONT_KILL_WINDOW, false);

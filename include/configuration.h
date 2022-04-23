@@ -97,6 +97,12 @@ struct Mode {
     SLIST_ENTRY(Mode) modes;
 };
 
+
+struct PersistentWorkspace {
+    char* name;
+    SLIST_ENTRY(PersistentWorkspace) entries;;
+};
+
 /**
  * Holds part of the configuration (the part which is not already in dedicated
  * structures in include/data.h).
@@ -263,6 +269,9 @@ struct Config {
 
     /* The number of currently parsed barconfigs */
     int number_barconfigs;
+
+    //<todo.eoin Check if this is the correct place for this
+    SLIST_HEAD(persistent_workspace_head, PersistentWorkspace) persistent_workspaces;
 };
 
 /**

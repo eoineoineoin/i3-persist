@@ -44,6 +44,7 @@ Con *con_new_skeleton(Con *parent, i3Window *window) {
     new->border_style = config.default_border;
     new->current_border_width = -1;
     new->window_icon_padding = -1;
+    new->persists = false;
     if (window) {
         new->depth = window->depth;
     } else {
@@ -1992,7 +1993,7 @@ static void con_on_remove_child(Con *con) {
 
     /* For workspaces, close them only if they're not visible anymore */
     if (con->type == CT_WORKSPACE) {
-        if (TAILQ_EMPTY(&(con->focus_head)) && !workspace_is_visible(con)) {
+        if (TAILQ_EMPTY(&(con->focus_head)) && !workspace_is_visible(con) && !con->persists) {
             LOG("Closing old workspace (%p / %s), it is empty\n", con, con->name);
             yajl_gen gen = ipc_marshal_workspace_event("empty", con, NULL);
             tree_close_internal(con, DONT_KILL_WINDOW, false);

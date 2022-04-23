@@ -705,6 +705,10 @@ struct Con {
      * window is floating. */
     bool sticky;
 
+    /* If this flag is set and this container is a workspace, don't
+     * remove it when it becomes empty */
+    bool persists;
+
     /* layout is the layout of this container: one of split[v|h], stacked or
      * tabbed. Special containers in the tree (above workspaces) have special
      * layouts like dockarea or output.

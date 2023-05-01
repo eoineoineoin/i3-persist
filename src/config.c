@@ -197,6 +197,7 @@ bool load_configuration(const char *override_configpath, config_load_t load_type
     INIT_COLOR(config.client.focused_inactive, "#333333", "#5f676a", "#ffffff", "#484e50");
     INIT_COLOR(config.client.unfocused, "#333333", "#222222", "#888888", "#292d2e");
     INIT_COLOR(config.client.urgent, "#2f343a", "#900000", "#ffffff", "#900000");
+    config.client.got_focused_tab_title = false;
 
     /* border and indicator color are ignored for placeholder contents */
     INIT_COLOR(config.client.placeholder, "#000000", "#0c0c0c", "#ffffff", "#000000");
@@ -215,11 +216,19 @@ bool load_configuration(const char *override_configpath, config_load_t load_type
     /* Set default_orientation to NO_ORIENTATION for auto orientation. */
     config.default_orientation = NO_ORIENTATION;
 
+    config.gaps.inner = 0;
+    config.gaps.top = 0;
+    config.gaps.right = 0;
+    config.gaps.bottom = 0;
+    config.gaps.left = 0;
+
     /* Set default urgency reset delay to 500ms */
     if (config.workspace_urgency_timer == 0)
         config.workspace_urgency_timer = 0.5;
 
     config.focus_wrapping = FOCUS_WRAPPING_ON;
+
+    config.tiling_drag = TILING_DRAG_MODIFIER;
 
     FREE(current_configpath);
     current_configpath = get_config_path(override_configpath, true);
@@ -272,15 +281,26 @@ bool load_configuration(const char *override_configpath, config_load_t load_type
         set_font(&config.font);
     }
 
+    /* Make bar config blocks without a configured font use the i3-wide font. */
+    Barconfig *current;
+    if (load_type != C_VALIDATE) {
+        TAILQ_FOREACH (current, &barconfigs, configs) {
+            if (current->font != NULL) {
+                continue;
+            }
+            current->font = sstrdup(config.font.pattern);
+        }
+    }
+
     if (load_type == C_RELOAD) {
         translate_keysyms();
         grab_all_keys(conn);
         regrab_all_buttons(conn);
+        gaps_reapply_workspace_assignments();
 
         /* Redraw the currently visible decorations on reload, so that the
          * possibly new drawing parameters changed. */
-        x_deco_recurse(croot);
-        xcb_flush(conn);
+        tree_render();
     }
 
     return result == 0;

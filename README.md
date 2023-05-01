@@ -1,3 +1,17 @@
+# i3-persist
+
+A fork of the i3 window manager, with an additional configuration option to persist workspaces. WorksForMe(TM)
+
+In your i3 config, add:
+
+```
+persist_workspace $ws1
+persist_workspace $ws2
+...
+persist_workspace $ws10
+```
+
+
 ![Logo](docs/logo-30.png) i3: A tiling window manager
 =====================================================
 
